@@ -1,20 +1,19 @@
 package model;
 
 public class Room {
-    int numberOfBeds;
-    double price;
-    boolean isOccupied;
-    boolean isDirty;
-    boolean isAvailable;
+    private int numberOfBeds;
+    private double price;
+    private boolean isOccupied;
+    private boolean isDirty;
 
-    public Room(int numberOfBeds, double price, boolean isOccupied, boolean isDirty, boolean isAvailabe) {
+
+    public Room(int numberOfBeds, double price, boolean isOccupied, boolean isDirty) {
         this.numberOfBeds = numberOfBeds;
         this.price = price;
         this.isOccupied = isOccupied;
         this.isDirty = isDirty;
-        this.isAvailable = isAvailabe;
-    }
 
+    }
 
     public int getNumberOfBeds() {
         return numberOfBeds;
@@ -67,13 +66,12 @@ public class Room {
         isDirty = dirty;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isAvailable(){
+        return !isOccupied || !isDirty;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
+
+
 
 
 

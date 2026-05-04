@@ -2,6 +2,7 @@ package model;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Reservation {
     String roomType;
@@ -9,10 +10,9 @@ public class Reservation {
     LocalDate checkedOutDate;
     double price;
     int numberOfNights;
-    boolean isWeekend;
     double reservationTotal;
 
-    public Reservation(String roomType, LocalDate checkedInDate, LocalDate checkedOutDate, boolean isWeekendStay) {
+    public Reservation(String roomType, LocalDate checkedInDate, LocalDate checkedOutDate) {
         this.roomType = roomType;
         this.checkedInDate = checkedInDate;
         this.checkedOutDate = checkedOutDate;
@@ -27,19 +27,11 @@ public class Reservation {
     }
 
     public int getNumberOfNights() {
-        return numberOfNights;
+        return (int) ChronoUnit.DAYS.between(checkedInDate, checkedOutDate);
     }
 
     public void setNumberOfNights(int numberOfNights) {
         this.numberOfNights = numberOfNights;
-    }
-
-    public boolean isWeekend() {
-        return isWeekend;
-    }
-
-    public void setWeekend(boolean weekend) {
-        isWeekend = weekend;
     }
 
     public double getReservationTotal() {
@@ -51,7 +43,7 @@ public class Reservation {
     }
 
     public String getRoomType() {
-        return roomType;
+        return roomType.toLowerCase();
     }
 
     public void setRoomType(String roomType) {
@@ -84,13 +76,19 @@ public class Reservation {
         return currentPrice;
     }
 
-    public boolean isWeekend(LocalDate checkedInDate, LocalDate checkedOutDate){
+    public double calculateTotalPrice(Room room){
+        double currentPrice = room.getPrice();
+
+        return currentPrice * getNumberOfNights();
+    }
+
+
+
+    private boolean isWeekend(LocalDate checkedInDate, LocalDate checkedOutDate){
             DayOfWeek start = checkedInDate.getDayOfWeek();
             DayOfWeek end = checkedOutDate.getDayOfWeek();
             return (start == DayOfWeek.SATURDAY || start == DayOfWeek.SUNDAY) ||
                     (end == DayOfWeek.SATURDAY || end == DayOfWeek.SUNDAY);
     }
-
-
 
 }

@@ -33,7 +33,7 @@ public class Room {
         this.price = price;
     }
 
-    public String roomType(Reservation r){
+    public String getRoomtype(Reservation r){
         String roomType = r.getRoomType();
 
         switch(roomType.toLowerCase()){

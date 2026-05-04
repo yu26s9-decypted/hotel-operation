@@ -63,10 +63,13 @@ public class Employee {
     public double getOvertimeHours(){
         return Math.max(0, hoursWorked - 40);
     }
+    public double getOverTimePay(){
+        return payRate * 1.5;
+    }
 
     public double getTotalPay(){
         double regularPay = payRate * getRegularHours();
-        double overTimePay = payRate * getOvertimeHours();
+        double overTimePay = getOverTimePay() * getOvertimeHours();
         double totalPay = regularPay + overTimePay;
         return totalPay;
     }

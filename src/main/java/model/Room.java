@@ -1,6 +1,7 @@
 package model;
 
 public class Room {
+    private String type;
     private int numberOfBeds;
     private double price;
     private boolean isOccupied;
@@ -13,6 +14,20 @@ public class Room {
         this.isOccupied = isOccupied;
         this.isDirty = isDirty;
 
+    }
+
+    public Room(String type){
+        this.type = type;
+        this.isOccupied = false;
+        this.isDirty = false;
+
+        if(type.equalsIgnoreCase("King")){
+            this.numberOfBeds = 1;
+            this.price = 139.00;
+        } else {
+            this.numberOfBeds = 2;
+            this.price = 120.00;
+        }
     }
 
     public int getNumberOfBeds() {
@@ -32,24 +47,6 @@ public class Room {
         this.price = price;
     }
 
-    public String getRoomtype(Reservation r){
-        String roomType = r.getRoomType();
-
-        switch(roomType.toLowerCase()){
-            case "king":
-                setPrice(139.00);
-                break;
-            case "double":
-                setPrice(120.00);
-                break;
-            default:
-                System.out.println("Error");
-                break;
-
-        }
-        return roomType;
-    }
-
     public boolean isOccupied() {
         return isOccupied;
     }
@@ -67,23 +64,31 @@ public class Room {
     }
 
     public boolean isAvailable(){
-        return !isOccupied || !isDirty;
+        return !isOccupied && !isDirty;
     }
 
 
     public void checkIn(){
-        setDirty(true);
-        setOccupied(true);
+        if(isAvailable()){
+            setDirty(true);
+            setOccupied(true);
+        }
     }
 
     public void checkOut(){
         setOccupied(false);
-        System.out.println("Awaiting for housekeeping");
     }
 
-    public void cleanRoom(Room room){
-        room.setDirty(false);
-        System.out.println("Room is ready for new guest");
+    public void cleanRoom(){
+        setDirty(false);
+    }
+
+    public String toString() {
+        return "Room type: " + type +
+                ", Price: " + price +
+                ", Number of bed: " + numberOfBeds +
+                ", Is Occupied: " + isOccupied +
+                ", Is Dirty: " + isDirty;
     }
 
 

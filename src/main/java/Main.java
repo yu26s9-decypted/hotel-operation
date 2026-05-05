@@ -7,6 +7,8 @@ import ui.Console;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
     public static void main(String[] args){
@@ -18,8 +20,6 @@ public class Main {
         System.out.printf("=".repeat(100) + "\n");
         testRoom();
         System.out.printf("=".repeat(100) + "\n");
-
-
     }
 
     public static void testReservation(){
@@ -72,6 +72,8 @@ public class Main {
         System.out.printf("Room is available? %s\n", r1.isAvailable());
         Room r2 = new Room(2, 140, false, false);
         System.out.printf("Room is available? %s\n", r2.isAvailable());
+
+        System.out.println(r1);
     }
 
     public static void testEmployee(){
@@ -101,21 +103,21 @@ public class Main {
     }
 
     public static void testHotel(){
-        Hotel h = new Hotel("Wynn", 12, 4);
+        Hotel h = new Hotel("Cabin Inn", 12, 42);
         System.out.println(h);
 
         String m = """
-                \t Welcome to Cabin Inn!
+                \t Welcome!
                 \t How many rooms will you be booking?
                 \t (x) to exit
-                """;
+                Your Input:""";
 
         String promptForRoom = "";
         boolean completedBooking = false;
         boolean isSuite = false;
         int roomCount = 0;
         while(!completedBooking){
-            promptForRoom = Console.askForString("How many rooms");
+            promptForRoom = Console.askForString(m);
             try {
                 roomCount = Integer.parseInt(promptForRoom);
 
@@ -127,18 +129,37 @@ public class Main {
                 }
             } catch (Exception e){
                 System.out.println(e.getMessage());
-
             }
             boolean success = h.bookRoom(roomCount, isSuite);
 
             if(!success){
-                System.out.println("Your selection isn't available!");
+                System.out.println("Your selection isn't available! please try again");
             } else {
-                System.out.println("Thank you! You're all set." + h.getNumberOfRooms() + h.getNumberOfSuites());
+                System.out.println("Thank you! You're all set.");
                 System.out.println(h);
                 completedBooking = true;
             }
         }
+
+
+        /**
+         * Simulates
+         */
+        boolean isSimSuite;
+        int simRoomCount;
+
+        System.out.println("Running simulation...");
+        for (int i = 0; i < 10; i++) {
+            isSimSuite = Math.random() < 0.5;
+            simRoomCount = ThreadLocalRandom.current().nextInt(1,3);
+
+            h.bookRoom(simRoomCount, isSimSuite);
+            System.out.println(h);
+        }
+
+
+
+
 
 
 

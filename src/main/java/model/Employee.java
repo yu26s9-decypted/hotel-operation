@@ -4,18 +4,17 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class Employee {
     private int employeeId;
     private String employeeName;
     private String department;
     private double payRate;
-    private double hoursWorked;
+    private long hoursWorked;
     private boolean isClockedIn;
     private Instant punchInTime;
     
-    public Employee(int employeeId, String employeeName, String department, double payRate, double hoursWorked) {
+    public Employee(int employeeId, String employeeName, String department, double payRate, long hoursWorked) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.department = department;
@@ -57,11 +56,11 @@ public class Employee {
         this.payRate = payRate;
     }
 
-    public double getHoursWorked() {
+    public long getHoursWorked() {
         return hoursWorked;
     }
 
-    public void setHoursWorked(double hoursWorked) {
+    public void setHoursWorked(long hoursWorked) {
         this.hoursWorked = hoursWorked;
     }
 
@@ -180,13 +179,12 @@ public class Employee {
 
     public String punchTimeCard(Instant punchInTime, Instant punchOutTime){
         Duration empWorkTime = Duration.between(punchInTime, punchOutTime);
-        double shiftTimeWorked = empWorkTime.toMinutes() / 60;
+        double shiftTimeWorked = empWorkTime.toMinutes() / 60.0;
         this.hoursWorked+= shiftTimeWorked;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("h:mm a")
                 .withZone(ZoneId.systemDefault());
-
-        String pInTime = dtf.format(punchInTime);
         String pOutTime = dtf.format(punchOutTime);
+        this.isClockedIn = false;
 
         return String.format("%s punched out at %s. Shift time: %d hr %d min"
                 ,this.employeeName, pOutTime, empWorkTime.toHours(), empWorkTime.toMinutesPart());

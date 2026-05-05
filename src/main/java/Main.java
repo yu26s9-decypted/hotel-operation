@@ -1,46 +1,64 @@
 import model.Employee;
 import model.Reservation;
 import model.Room;
+import ui.Console;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args){
+        System.out.printf("=".repeat(100) + "\n");
+        testEmployee();
+        System.out.printf("=".repeat(100) + "\n");
+        testReservation();
+        System.out.printf("=".repeat(100) + "\n");
+        testRoom();
+    }
 
-
+    public static void testReservation(){
+        LocalDate today = LocalDate.now();
         LocalDate checkIn = LocalDate.of(2026, 5, 8);
         LocalDate checkOut = LocalDate.of(2026, 5, 10);
-
         Reservation myReservation = new Reservation("kIng", checkIn, checkOut);
+        System.out.printf("Today is %s\n", today);
 
 
-        Room myRoom = new Room(1, 139.00, false, false);
+        Room r1 = new Room(1, 139.00, false, false);
 
-        double finalPrice = myReservation.calculateRoomPrice(myRoom);
+        double finalPrice = myReservation.calculateRoomPrice(r1);
         double totalPriceForStay = finalPrice * myReservation.getNumberOfNights();
 
         /**
          * Room Test Case
          */
-        if(myRoom.isDirty()){
+        if(r1.isDirty()){
             System.out.println("Room is dirty and isn't available. Sorry!");
-        } else if (myRoom.isOccupied()) {
+        } else if (r1.isOccupied()) {
             System.out.println("This room is already occupied!");
         } else {
             System.out.printf("Thank you! You're checked out for the %s room on %s to %s $%.2f. You are staying %s nights. Total: $%.2f %n", myReservation.getRoomType(), checkIn, checkOut, finalPrice, myReservation.getNumberOfNights(), totalPriceForStay);
-            System.out.printf("Base Price: $%.2f\n", myRoom.getPrice());
+            r1.checkIn();
+            System.out.printf("Base Price: $%.2f\n", r1.getPrice());
             System.out.println("Total Price with Surcharge" + finalPrice);
-            myRoom.setOccupied(true);
+
+            boolean passingDayOption = true;
+            while(passingDayOption){
+                try {
+                    String userInput = Console.askForString("Would you like to pass a day? (y/n)");
+                    if(userInput.equalsIgnoreCase("y")){
+                        today = today.plusDays(1);
+                        System.out.printf("Time skipped. Today is: %s", today);
+                    } else if (userInput.equalsIgnoreCase("n")) {
+                        break;
+                    }
+                } catch (Exception e){
+                    System.out.println("Invalid");
+                }
+            }
+
         }
 
-
-        Employee e = new Employee(1, "Samuel Veloz", "Engineering", 150, 55);
-        double samsSalary = e.getTotalPay();
-
-        System.out.printf("%s Salary: $%.2f for %.0f hours worked\n", e.getEmployeeName(), samsSalary, e.getHoursWorked());
-        System.out.printf("Overtime Pay $%.2f for %.0f hours of overtime\n", e.getOverTimePay(), e.getOvertimeHours());
-
-        testRoom();
     }
 
     public static void testRoom(){
@@ -49,4 +67,25 @@ public class Main {
         Room r2 = new Room(2, 140, false, false);
         System.out.printf("Room is available? %s\n", r2.isAvailable());
     }
+
+    public static void testEmployee(){
+        Employee e = new Employee(1, "Samuel Veloz", "Engineering", 150, 55);
+        double sam = e.getTotalPay();
+
+        System.out.printf("%s Salary: $%.2f for %.0f hours worked\n", e.getEmployeeName(), sam, e.getHoursWorked());
+        System.out.printf("Overtime Pay $%.2f for %.0f hours of overtime\n", e.getOverTimePay(), e.getOvertimeHours());
+
+        Instant empPunchIn = e.punchIn();
+
+        System.out.printf("\u001B[36m[log]\u001B[0m \u001B[32m%-15s\u001B[0m(ID: \u001B[33m%d\u001B[0m) \u001B[36mPunch In:\u001B[0m %s\n", e.getEmployeeName(), e.getEmployeeId(), empPunchIn);
+
+        Instant simulateWorkDay = e.simulateWorkDay(empPunchIn);
+
+        e.punchOut(empPunchIn, simulateWorkDay);
+
+
+
+    }
+
+
 }

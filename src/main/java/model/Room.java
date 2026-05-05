@@ -71,6 +71,21 @@ public class Room {
     }
 
 
+    public void checkIn(){
+        setDirty(true);
+        setOccupied(true);
+    }
+
+    public void checkOut(){
+        setOccupied(false);
+        System.out.println("Awaiting for housekeeping");
+    }
+
+    public void cleanRoom(Room room){
+        room.setDirty(false);
+        System.out.println("Room is ready for new guest");
+    }
+
 
 
 

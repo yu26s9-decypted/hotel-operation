@@ -11,6 +11,8 @@ public class Reservation {
     double price;
     int numberOfNights;
     double reservationTotal;
+    boolean weekend;
+
 
     public Reservation(String roomType, LocalDate checkedInDate, LocalDate checkedOutDate) {
         this.roomType = roomType;
